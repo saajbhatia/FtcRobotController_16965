@@ -254,8 +254,8 @@ public class AutoFrontLeft extends LinearOpMode {
                 }
             }
         }
-        telemetry.addData("spike", "spike" + spike);
-        telemetry.addData("volt", "volt" + ultra.getVoltage()*157);
+        telemetry.addData("spike", "spike " + spike);
+        telemetry.addData("volt", "volt " + ultra.getVoltage()*157);
         telemetry.update();
 
         //telemetry.addData("Path", "Complete");
@@ -270,8 +270,23 @@ public class AutoFrontLeft extends LinearOpMode {
 
         } else if (spike == 1) {
             //left movement
+            //turn to same direction as if it were center
+            turnToHeading(TURN_SPEED, 0);
+            //place pixel on april tag 1
+            //need to avoid moving own pixel out of place
         } else {
             //right movement
+            //turn to same direction as if it were center
+            turnToHeading(TURN_SPEED, 0);
+            //place pixel on april tag 3
+            driveStraight(DRIVE_SPEED,17, 0.0);
+            driveStraight(DRIVE_SPEED,-9, 0.0);
+            turnToHeading(TURN_SPEED, 90);
+            driveStraight(DRIVE_SPEED, 33, 90.0);
+            //strafe right before placing pixel to put on april tag 3
+            driveStraight(DRIVE_SPEED, 5, 90.0, true);
+            arm.setTargetPosition(1480);
+            sleep(5000);
         }
          // Pause to display last telemetry message.
     }
@@ -301,7 +316,8 @@ public class AutoFrontLeft extends LinearOpMode {
     */
     public void driveStraight(double maxDriveSpeed,
                               double distance,
-                              double heading) {
+                              double heading,
+                              boolean isStrafe) {
 
         // Ensure that the OpMode is still active
         if (opModeIsActive()) {
@@ -312,10 +328,18 @@ public class AutoFrontLeft extends LinearOpMode {
             rightTarget = rightDrive.getCurrentPosition() + moveCounts;
 
             // Set Target FIRST, then turn on RUN_TO_POSITION
-            leftDrive.setTargetPosition(leftTarget);
-            rightDrive.setTargetPosition(rightTarget);
-            leftDrive2.setTargetPosition(leftTarget);
-            rightDrive2.setTargetPosition(rightTarget);
+            if (isStrafe) {
+                //need to test this
+                leftDrive.setTargetPosition(rightTarget);
+                rightDrive.setTargetPosition(leftTarget);
+                leftDrive2.setTargetPosition(rightTarget);
+                rightDrive2.setTargetPosition(leftTarget);
+            } else {
+                leftDrive.setTargetPosition(leftTarget);
+                rightDrive.setTargetPosition(rightTarget);
+                leftDrive2.setTargetPosition(leftTarget);
+                rightDrive2.setTargetPosition(rightTarget);
+            }
 
             leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -352,6 +376,14 @@ public class AutoFrontLeft extends LinearOpMode {
             leftDrive2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             rightDrive2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
+    }
+
+    //overloaded method for driveStraight, so it doesn't strafe when not specified
+    public void driveStraight(double maxDriveSpeed,
+                              double distance,
+                              double heading) {
+
+        driveStraight(maxDriveSpeed, distance, heading, false);
     }
 
     /**
