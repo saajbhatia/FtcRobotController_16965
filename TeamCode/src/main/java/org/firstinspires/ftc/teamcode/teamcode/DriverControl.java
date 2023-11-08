@@ -61,8 +61,8 @@ import java.util.List;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Basic: Iterative OpMode", group="Iterative Opmode")
-public class BasicOpMode_Iterative_copy extends OpMode
+@TeleOp(name="Driver Controlled Code", group="TeleOp")
+public class DriverControl extends OpMode
 {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
