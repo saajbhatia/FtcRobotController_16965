@@ -113,8 +113,10 @@ public class AutoFrontLeft extends LinearOpMode {
     private double  turnSpeed     = 0;
     private double  leftSpeed     = 0;
     private double  rightSpeed    = 0;
-    private int     leftTarget    = 0;
-    private int     rightTarget   = 0;
+    private int     leftTarget1    = 0;
+    private int     rightTarget1   = 0;
+    private int     leftTarget2    = 0;
+    private int     rightTarget2   = 0;
 
     // Calculate the COUNTS_PER_INCH for your specific drive train.
     // Go to your motor vendor website to determine your motor's COUNTS_PER_MOTOR_REV
@@ -324,22 +326,23 @@ public class AutoFrontLeft extends LinearOpMode {
 
             // Determine new target position, and pass to motor controller
             int moveCounts = (int)(distance * COUNTS_PER_INCH);
-            leftTarget = leftDrive.getCurrentPosition() + moveCounts;
-            rightTarget = rightDrive.getCurrentPosition() + moveCounts;
-
-            // Set Target FIRST, then turn on RUN_TO_POSITION
             if (isStrafe) {
-                //need to test this
-                leftDrive.setTargetPosition(rightTarget);
-                rightDrive.setTargetPosition(leftTarget);
-                leftDrive2.setTargetPosition(rightTarget);
-                rightDrive2.setTargetPosition(leftTarget);
+                //test which ones are pos which ones are negative
+                leftTarget1 = leftDrive.getCurrentPosition() + moveCounts;
+                rightTarget1 = rightDrive.getCurrentPosition() - moveCounts;
+                leftTarget2 = leftDrive.getCurrentPosition() + moveCounts;
+                rightTarget2 = rightDrive.getCurrentPosition() - moveCounts;
             } else {
-                leftDrive.setTargetPosition(leftTarget);
-                rightDrive.setTargetPosition(rightTarget);
-                leftDrive2.setTargetPosition(leftTarget);
-                rightDrive2.setTargetPosition(rightTarget);
+                leftTarget1 = leftDrive.getCurrentPosition() + moveCounts;
+                rightTarget1 = rightDrive.getCurrentPosition() + moveCounts;
+                leftTarget2 = leftDrive.getCurrentPosition() + moveCounts;
+                rightTarget2 = rightDrive.getCurrentPosition() + moveCounts;
             }
+
+            leftDrive.setTargetPosition(leftTarget1);
+            rightDrive.setTargetPosition(rightTarget1);
+            leftDrive2.setTargetPosition(leftTarget2);
+            rightDrive2.setTargetPosition(rightTarget2);
 
             leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -521,7 +524,7 @@ public class AutoFrontLeft extends LinearOpMode {
 
         if (straight) {
             telemetry.addData("Motion", "Drive Straight");
-            telemetry.addData("Target Pos L:R",  "%7d:%7d",      leftTarget,  rightTarget);
+            telemetry.addData("Target Pos L:R",  "%7d:%7d",      leftTarget1,  rightTarget1);
             telemetry.addData("Actual Pos L:R",  "%7d:%7d",      leftDrive.getCurrentPosition(),
                     rightDrive.getCurrentPosition());
         } else {
