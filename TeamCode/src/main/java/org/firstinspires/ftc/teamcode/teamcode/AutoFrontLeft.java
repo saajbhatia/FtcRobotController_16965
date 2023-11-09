@@ -128,7 +128,7 @@ public class AutoFrontLeft extends LinearOpMode {
     static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // No External Gearing.
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-                                                      (WHEEL_DIAMETER_INCHES * 3.1415);
+            (WHEEL_DIAMETER_INCHES * 3.1415);
     static final boolean isMirror = false;
     static final boolean isBack = false;
 
@@ -138,7 +138,7 @@ public class AutoFrontLeft extends LinearOpMode {
     static final double     DRIVE_SPEED             = 0.2;     // Max driving speed for better distance accuracy.
     static final double     TURN_SPEED              = 0.2;     // Max Turn speed to limit turn rate
     static final double     HEADING_THRESHOLD       = 1.0 ;    // How close must the heading get to the target before moving to next step.
-                                                               // Requiring more accuracy (a smaller number) will often make the turn take longer to get into the final position.
+    // Requiring more accuracy (a smaller number) will often make the turn take longer to get into the final position.
     // Define the Proportional control coefficient (or GAIN) for "heading control".
     // We define one value when Turning (larger errors), and the other is used when Driving straight (smaller errors).
     // Increase these numbers if the heading does not corrects strongly enough (eg: a heavy robot or using tracks)
@@ -290,7 +290,7 @@ public class AutoFrontLeft extends LinearOpMode {
             arm.setTargetPosition(1480);
             sleep(5000);
         }
-         // Pause to display last telemetry message.
+        // Pause to display last telemetry message.
     }
 
     /*
@@ -305,17 +305,17 @@ public class AutoFrontLeft extends LinearOpMode {
 
 
     /**
-    *  Drive in a straight line, on a fixed compass heading (angle), based on encoder counts.
-    *  Move will stop if either of these conditions occur:
-    *  1) Move gets to the desired position
-    *  2) Driver stops the OpMode running.
-    *
-    * @param maxDriveSpeed MAX Speed for forward/rev motion (range 0 to +1.0) .
-    * @param distance   Distance (in inches) to move from current position.  Negative distance means move backward.
-    * @param heading      Absolute Heading Angle (in Degrees) relative to last gyro reset.
-    *                   0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
-    *                   If a relative angle is required, add/subtract from the current robotHeading.
-    */
+     *  Drive in a straight line, on a fixed compass heading (angle), based on encoder counts.
+     *  Move will stop if either of these conditions occur:
+     *  1) Move gets to the desired position
+     *  2) Driver stops the OpMode running.
+     *
+     * @param maxDriveSpeed MAX Speed for forward/rev motion (range 0 to +1.0) .
+     * @param distance   Distance (in inches) to move from current position.  Negative distance means move backward.
+     * @param heading      Absolute Heading Angle (in Degrees) relative to last gyro reset.
+     *                   0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
+     *                   If a relative angle is required, add/subtract from the current robotHeading.
+     */
     public void driveStraight(double maxDriveSpeed,
                               double distance,
                               double heading,
@@ -328,15 +328,16 @@ public class AutoFrontLeft extends LinearOpMode {
             int moveCounts = (int)(distance * COUNTS_PER_INCH);
             if (isStrafe) {
                 //test which ones are pos which ones are negative
-                leftTarget1 = leftDrive.getCurrentPosition() + moveCounts;
-                rightTarget1 = rightDrive.getCurrentPosition() - moveCounts;
-                leftTarget2 = leftDrive.getCurrentPosition() + moveCounts;
-                rightTarget2 = rightDrive.getCurrentPosition() - moveCounts;
+                //should work now, but still test
+                leftTarget1 = leftDrive.getCurrentPosition() - moveCounts;
+                rightTarget1 = rightDrive.getCurrentPosition() + moveCounts;
+                leftTarget2 = leftDrive2.getCurrentPosition() + moveCounts;
+                rightTarget2 = rightDrive2.getCurrentPosition() - moveCounts;
             } else {
                 leftTarget1 = leftDrive.getCurrentPosition() + moveCounts;
                 rightTarget1 = rightDrive.getCurrentPosition() + moveCounts;
-                leftTarget2 = leftDrive.getCurrentPosition() + moveCounts;
-                rightTarget2 = rightDrive.getCurrentPosition() + moveCounts;
+                leftTarget2 = leftDrive2.getCurrentPosition() + moveCounts;
+                rightTarget2 = rightDrive2.getCurrentPosition() + moveCounts;
             }
 
             leftDrive.setTargetPosition(leftTarget1);
@@ -356,7 +357,7 @@ public class AutoFrontLeft extends LinearOpMode {
 
             // keep looping while we are still active, and BOTH motors are running.
             while (opModeIsActive() &&
-                   (leftDrive.isBusy() && rightDrive.isBusy())) {
+                    (leftDrive.isBusy() && rightDrive.isBusy())) {
 
                 // Determine required steering to keep on heading
                 turnSpeed = getSteeringCorrection(heading, P_DRIVE_GAIN);
@@ -387,6 +388,18 @@ public class AutoFrontLeft extends LinearOpMode {
                               double heading) {
 
         driveStraight(maxDriveSpeed, distance, heading, false);
+    }
+
+    //strafe method: same input as driveStraight method, but specify if strafing "left" or "right"
+    //test to make sure direction is correct
+    public void strafe(double maxDriveSpeed,
+                       double distance,
+                       double heading,
+                       String direction) {
+        if(direction.equals("right")) {
+            distance = -distance;
+        }
+        driveStraight(maxDriveSpeed, distance, heading, true);
     }
 
     /**
