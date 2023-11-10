@@ -342,7 +342,7 @@ public class DriverControl extends OpMode
             }
         } else {
             //autonomous code
-            turn = calculateP();
+            turn = calculateP(0.02);
             heading = normalize(heading);
             //get to our strip, put pixel down after identifying which one has our team object
 
