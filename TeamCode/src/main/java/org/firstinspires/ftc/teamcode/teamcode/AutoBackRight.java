@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode.teamcode;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -101,6 +102,7 @@ public class AutoBackRight extends LinearOpMode {
     private Servo claw  = null;
 
     private IMU             imu         = null;      // Control/Expansion Hub IMU
+    private AnalogInput ultra = null;
 
     private double          headingError  = 0;
 
@@ -155,6 +157,7 @@ public class AutoBackRight extends LinearOpMode {
         rightDrive2 = hardwareMap.get(DcMotor.class, "BACKRIGHT");
         arm = hardwareMap.get(DcMotor.class, "ARM");
         claw = hardwareMap.get(Servo.class, "CLAW");
+        ultra = hardwareMap.get(AnalogInput.class, "ULTRASONIC");
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // When run, this OpMode should start both motors driving forward. So adjust these two lines based on your first test drive.
@@ -208,11 +211,33 @@ public class AutoBackRight extends LinearOpMode {
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         imu.resetYaw();
 
+        driveStraight(DRIVE_SPEED,12, 0);
+        int spike = 3;
+        for (int i = 0; i < 50; i++) {
+            if (ultra.getVoltage()*157 <= 70) {
+                spike = 2;
+                break;
+            }
+        }
+        if (spike == 3) {
+            turnToHeading(TURN_SPEED, -30);
+            for (int i = 0; i < 50; i++) {
+                if (ultra.getVoltage() * 157 <= 70) {
+                    //left;
+                    spike = 1;
+                }
+            }
+        }
+        telemetry.addData("spike", "spike " + spike);
+        telemetry.addData("volt", "volt " + ultra.getVoltage()*157);
+        telemetry.update();
+
         // Step through each leg of the path,
         // Notes:   Reverse movement is obtained by setting a negative distance (not speed)
         //          holdHeading() is used after turns to let the heading stabilize
         //          Add a sleep(2000) after any step to keep the telemetry data visible for review
 
+        /*
         int multiplier = 1;
         if (isMirror) {
             multiplier = -1;
@@ -238,6 +263,7 @@ public class AutoBackRight extends LinearOpMode {
         turnToHeading( TURN_SPEED,  -90);
         driveStraight(DRIVE_SPEED,10, -90);
          */
+
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
