@@ -217,22 +217,14 @@ public class DriverControl extends OpMode
         return normalized_angle;
     }
 
-    public double calculateP() {
+    public double calculateP(double power) {
         double currentHeading = getAngleImu();
-        if (currentHeading < 0) {
-            currentHeading = 360 + currentHeading;
-        }
         double wantedHeading = heading;
-        if (wantedHeading < 0) {
-            wantedHeading = 360 + wantedHeading;
-        }
-        double setHeading = currentHeading - wantedHeading;
-        if (setHeading > 180) {
-            return -(360 - setHeading)/50;
-        } else if (setHeading < -180) {
-            return (360 + setHeading)/50;
-        }
-        return setHeading/50;
+        double headingCorrection = wantedHeading - currentHeading;
+        while (headingCorrection > 180) headingCorrection -= 360;
+        while (headingCorrection <= -180) headingCorrection += 360;
+
+        return headingCorrection * power;
     }
 
     public void driveTo(double toX, double toY) {
@@ -300,7 +292,7 @@ public class DriverControl extends OpMode
             // just change wanted heading with turn on game controller, and let the automatic system do the rest.
             heading -= gamepad1.right_stick_x * 6 * slowMultiplier;
             heading = normalize(heading);
-            turn = gamepad1.right_stick_x * slowMultiplier;
+            turn = calculateP(0.02);
             strafe = -gamepad1.left_stick_x * slowMultiplier;
             forward = -gamepad1.left_stick_y * slowMultiplier;
             if (gamepad1.dpad_down) {

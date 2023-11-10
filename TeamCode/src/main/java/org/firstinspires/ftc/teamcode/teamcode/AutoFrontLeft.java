@@ -286,7 +286,7 @@ public class AutoFrontLeft extends LinearOpMode {
             turnToHeading(TURN_SPEED, 90);
             driveStraight(DRIVE_SPEED, 33, 90.0);
             //strafe right before placing pixel to put on april tag 3
-            driveStraight(DRIVE_SPEED, 5, 90.0, true);
+            strafe(DRIVE_SPEED, 5, 90.0);
             arm.setTargetPosition(1480);
             sleep(5000);
         }
@@ -390,15 +390,11 @@ public class AutoFrontLeft extends LinearOpMode {
         driveStraight(maxDriveSpeed, distance, heading, false);
     }
 
-    //strafe method: same input as driveStraight method, but specify if strafing "left" or "right"
+    //strafe method: same input as driveStraight method
     //test to make sure direction is correct
     public void strafe(double maxDriveSpeed,
                        double distance,
-                       double heading,
-                       String direction) {
-        if(direction.equals("right")) {
-            distance = -distance;
-        }
+                       double heading) {
         driveStraight(maxDriveSpeed, distance, heading, true);
     }
 

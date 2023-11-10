@@ -111,8 +111,10 @@ public class AutoBackLeft extends LinearOpMode {
     private double  turnSpeed     = 0;
     private double  leftSpeed     = 0;
     private double  rightSpeed    = 0;
-    private int     leftTarget    = 0;
-    private int     rightTarget   = 0;
+    private int     leftTarget1    = 0;
+    private int     rightTarget1   = 0;
+    private int     leftTarget2    = 0;
+    private int     rightTarget2   = 0;
 
     // Calculate the COUNTS_PER_INCH for your specific drive train.
     // Go to your motor vendor website to determine your motor's COUNTS_PER_MOTOR_REV
@@ -247,12 +249,6 @@ public class AutoBackLeft extends LinearOpMode {
 
     // **********  HIGH Level driving functions.  ********************
 
-    public void moveArmToPos(int pos) {
-        arm.setTargetPosition(pos);
-        while (arm.getCurrentPosition() < pos - 5 || arm.getCurrentPosition() > pos + 5) {
-            telemetry.addData("Arm moving", "Arm is moving");
-        }
-    }
 
     /**
     *  Drive in a straight line, on a fixed compass heading (angle), based on encoder counts.
@@ -268,21 +264,32 @@ public class AutoBackLeft extends LinearOpMode {
     */
     public void driveStraight(double maxDriveSpeed,
                               double distance,
-                              double heading) {
+                              double heading,
+                              boolean isStrafe) {
 
         // Ensure that the OpMode is still active
         if (opModeIsActive()) {
 
             // Determine new target position, and pass to motor controller
             int moveCounts = (int)(distance * COUNTS_PER_INCH);
-            leftTarget = leftDrive.getCurrentPosition() + moveCounts;
-            rightTarget = rightDrive.getCurrentPosition() + moveCounts;
+            if (isStrafe) {
+                //test which ones are pos which ones are negative
+                //should work now, but still test
+                leftTarget1 = leftDrive.getCurrentPosition() - moveCounts;
+                rightTarget1 = rightDrive.getCurrentPosition() + moveCounts;
+                leftTarget2 = leftDrive2.getCurrentPosition() + moveCounts;
+                rightTarget2 = rightDrive2.getCurrentPosition() - moveCounts;
+            } else {
+                leftTarget1 = leftDrive.getCurrentPosition() + moveCounts;
+                rightTarget1 = rightDrive.getCurrentPosition() + moveCounts;
+                leftTarget2 = leftDrive2.getCurrentPosition() + moveCounts;
+                rightTarget2 = rightDrive2.getCurrentPosition() + moveCounts;
+            }
 
-            // Set Target FIRST, then turn on RUN_TO_POSITION
-            leftDrive.setTargetPosition(leftTarget);
-            rightDrive.setTargetPosition(rightTarget);
-            leftDrive2.setTargetPosition(leftTarget);
-            rightDrive2.setTargetPosition(rightTarget);
+            leftDrive.setTargetPosition(leftTarget1);
+            rightDrive.setTargetPosition(rightTarget1);
+            leftDrive2.setTargetPosition(leftTarget2);
+            rightDrive2.setTargetPosition(rightTarget2);
 
             leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -296,7 +303,7 @@ public class AutoBackLeft extends LinearOpMode {
 
             // keep looping while we are still active, and BOTH motors are running.
             while (opModeIsActive() &&
-                   (leftDrive.isBusy() && rightDrive.isBusy())) {
+                    (leftDrive.isBusy() && rightDrive.isBusy())) {
 
                 // Determine required steering to keep on heading
                 turnSpeed = getSteeringCorrection(heading, P_DRIVE_GAIN);
@@ -319,6 +326,22 @@ public class AutoBackLeft extends LinearOpMode {
             leftDrive2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             rightDrive2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
+    }
+
+    //overloaded method for driveStraight, so it doesn't strafe when not specified
+    public void driveStraight(double maxDriveSpeed,
+                              double distance,
+                              double heading) {
+
+        driveStraight(maxDriveSpeed, distance, heading, false);
+    }
+
+    //strafe method: same input as driveStraight method
+    //test to make sure direction is correct
+    public void strafe(double maxDriveSpeed,
+                       double distance,
+                       double heading) {
+        driveStraight(maxDriveSpeed, distance, heading, true);
     }
 
     /**
@@ -456,7 +479,7 @@ public class AutoBackLeft extends LinearOpMode {
 
         if (straight) {
             telemetry.addData("Motion", "Drive Straight");
-            telemetry.addData("Target Pos L:R",  "%7d:%7d",      leftTarget,  rightTarget);
+            telemetry.addData("Target Pos L:R",  "%7d:%7d",      leftTarget1,  rightTarget1);
             telemetry.addData("Actual Pos L:R",  "%7d:%7d",      leftDrive.getCurrentPosition(),
                     rightDrive.getCurrentPosition());
         } else {
