@@ -212,10 +212,10 @@ public class AutoBackRight extends LinearOpMode {
         imu.resetYaw();
 
         driveStraight(DRIVE_SPEED,12, 0);
-        int spike = 3;
+        int spike = 4;
         for (int i = 0; i < 50; i++) {
             if (ultra.getVoltage()*157 <= 70) {
-                spike = 2;
+                spike = 5;
                 break;
             }
         }
@@ -224,7 +224,7 @@ public class AutoBackRight extends LinearOpMode {
             for (int i = 0; i < 50; i++) {
                 if (ultra.getVoltage() * 157 <= 70) {
                     //left;
-                    spike = 1;
+                    spike = 6;
                 }
             }
         }
