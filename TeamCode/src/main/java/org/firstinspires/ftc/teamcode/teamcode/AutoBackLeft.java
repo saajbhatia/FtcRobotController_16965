@@ -212,19 +212,19 @@ public class AutoBackLeft extends LinearOpMode {
         imu.resetYaw();
 
         driveStraight(DRIVE_SPEED,12, 0);
-        int spike = 3;
+        int spike = 1;
         for (int i = 0; i < 50; i++) {
             if (ultra.getVoltage()*157 <= 70) {
                 spike = 2;
                 break;
             }
         }
-        if (spike == 3) {
-            turnToHeading(TURN_SPEED, -30);
+        if (spike == 1) {
+            turnToHeading(TURN_SPEED, 30);
             for (int i = 0; i < 50; i++) {
                 if (ultra.getVoltage() * 157 <= 70) {
                     //left;
-                    spike = 1;
+                    spike = 3;
                 }
             }
         }
