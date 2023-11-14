@@ -212,6 +212,7 @@ public class AutoBackLeft extends LinearOpMode {
         imu.resetYaw();
 
         driveStraight(DRIVE_SPEED,12, 0);
+        //Turn to detect team object
         int spike = 1;
         for (int i = 0; i < 50; i++) {
             if (ultra.getVoltage()*157 <= 70) {
