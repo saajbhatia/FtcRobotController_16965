@@ -230,7 +230,6 @@ public class AutoFrontRight extends LinearOpMode {
         }
         telemetry.addData("spike", "spike " + spike);
         telemetry.addData("volt", "volt " + ultra.getVoltage()*157);
-        telemetry.update();
 
         // Step through each leg of the path,
         // Notes:   Reverse movement is obtained by setting a negative distance (not speed)

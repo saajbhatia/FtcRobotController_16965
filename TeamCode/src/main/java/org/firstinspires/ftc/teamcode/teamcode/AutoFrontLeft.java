@@ -256,9 +256,6 @@ public class AutoFrontLeft extends LinearOpMode {
                 }
             }
         }
-        telemetry.addData("spike", "spike " + spike);
-        telemetry.addData("volt", "volt " + ultra.getVoltage()*157);
-        telemetry.update();
 
         //telemetry.addData("Path", "Complete");
         if (spike == 2) {
@@ -288,6 +285,9 @@ public class AutoFrontLeft extends LinearOpMode {
             //strafe right before placing pixel to put on april tag 3
             strafe(DRIVE_SPEED, 5, 90.0);
             arm.setTargetPosition(1480);
+            telemetry.addData("spike", "spike " + spike);
+            telemetry.addData("volt", "volt " + ultra.getVoltage()*157);
+            telemetry.update();
             sleep(5000);
         }
         // Pause to display last telemetry message.
