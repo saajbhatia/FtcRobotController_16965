@@ -357,7 +357,7 @@ public class AutoFrontLeft extends LinearOpMode {
 
             // keep looping while we are still active, and BOTH motors are running.
             while (opModeIsActive() &&
-                    (leftDrive.isBusy() && rightDrive.isBusy())) {
+                    (leftDrive.isBusy() && rightDrive.isBusy() && leftDrive2.isBusy() && rightDrive2.isBusy())) {
 
                 // Determine required steering to keep on heading
                 turnSpeed = getSteeringCorrection(heading, P_DRIVE_GAIN);
