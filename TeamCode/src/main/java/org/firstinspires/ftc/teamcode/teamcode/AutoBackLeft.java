@@ -214,7 +214,7 @@ public class AutoBackLeft extends LinearOpMode {
         driveStraight(DRIVE_SPEED,12, 0);
         int spike = 1;
         for (int i = 0; i < 50; i++) {
-            if (ultra.getVoltage()*157 <= 70) {
+            if (ultra.getVoltage()*157 <= 75) {
                 spike = 2;
                 break;
             }
