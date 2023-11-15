@@ -365,6 +365,7 @@ public class AutoBackRight extends LinearOpMode {
         driveStraight(maxDriveSpeed, distance, heading, false);
     }
 
+
     //strafe method: same input as driveStraight method
     //test to make sure direction is correct
     public void strafe(double maxDriveSpeed,
