@@ -236,7 +236,7 @@ public class AutoBackLeft extends LinearOpMode {
             driveStraight(DRIVE_SPEED,17, 0.0);
             driveStraight(DRIVE_SPEED,-9, 0.0);
             turnToHeading(TURN_SPEED, 90);
-            driveStraight(DRIVE_SPEED, 50, 90.0);
+            driveStraight(DRIVE_SPEED, 80, 90.0);
             arm.setTargetPosition(1480);
             claw.setPosition(0);
         }
