@@ -243,7 +243,20 @@ public class AutoBackRight extends LinearOpMode {
             holdHeading(TURN_SPEED, -90.0, 2);
             arm.setTargetPosition(0);
         }
-
+        else if (spike == 4) {
+            driveStraight(DRIVE_SPEED,10, 0.0);
+            driveStraight(DRIVE_SPEED,-10, 0.0);
+            turnToHeading(TURN_SPEED, 0);
+            strafe(DRIVE_SPEED, -20, 0.0);
+            driveStraight(DRIVE_SPEED, 40, 0.0);
+            turnToHeading(TURN_SPEED, -90.0);
+//            arm.setTargetPosition(1480);
+//            telemetry.addData("Claw Position", "CLAW POS"+claw.getPosition());
+//            claw.setPosition(0);
+//            telemetry.addData("Claw Position", "CLAW POS"+claw.getPosition());
+//            holdHeading(TURN_SPEED, -90.0, 2);
+//            arm.setTargetPosition(0);
+        }
 
         // Step through each leg of the path,
         // Notes:   Reverse movement is obtained by setting a negative distance (not speed)
