@@ -220,7 +220,7 @@ public class DriverControl extends OpMode
     public double calculateP(double power) {
         double currentHeading = getAngleImu();
         double wantedHeading = heading;
-        double headingCorrection = wantedHeading - currentHeading;
+        double headingCorrection = currentHeading - wantedHeading;
         while (headingCorrection > 180) headingCorrection -= 360;
         while (headingCorrection <= -180) headingCorrection += 360;
 
