@@ -231,6 +231,16 @@ public class AutoBackLeft extends LinearOpMode {
         telemetry.addData("spike", "spike " + spike);
         telemetry.addData("volt", "volt " + ultra.getVoltage()*157);
 
+
+        if (spike == 2) {
+            driveStraight(DRIVE_SPEED,17, 0.0);
+            driveStraight(DRIVE_SPEED,-9, 0.0);
+            turnToHeading(TURN_SPEED, 90);
+            driveStraight(DRIVE_SPEED, 50, 90.0);
+            arm.setTargetPosition(1480);
+            claw.setPosition(0);
+        }
+
         // Step through each leg of the path,
         // Notes:   Reverse movement is obtained by setting a negative distance (not speed)
         //          holdHeading() is used after turns to let the heading stabilize
