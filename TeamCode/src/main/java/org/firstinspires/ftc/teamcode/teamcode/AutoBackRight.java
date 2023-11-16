@@ -232,19 +232,36 @@ public class AutoBackRight extends LinearOpMode {
         telemetry.addData("volt", "volt " + ultra.getVoltage()*157);
 
         if (spike == 5) {
-            driveStraight(DRIVE_SPEED,14, 0.0);
+            driveStraight(DRIVE_SPEED,15, 0.0);
             driveStraight(DRIVE_SPEED,-5, 0.0);
-            turnToHeading(TURN_SPEED, -90);
+            turnToHeading(TURN_SPEED, -90.0);
             driveStraight(DRIVE_SPEED, 70, -90.0);
             strafe(DRIVE_SPEED, -2, -90.0);
-            arm.setTargetPosition(1575);
+            arm.setTargetPosition(1550);
+            holdHeading(TURN_SPEED, -90.0, 3);
             telemetry.addData("Claw Position", "CLAW POS"+claw.getPosition());
             claw.setPosition(0);
             telemetry.addData("Claw Position", "CLAW POS"+claw.getPosition());
             holdHeading(TURN_SPEED, -90.0, 2);
             arm.setTargetPosition(0);
         }
-
+        else if (spike == 4) {
+            driveStraight(DRIVE_SPEED,10, 30.0);
+            driveStraight(DRIVE_SPEED,-10, 30.0);
+            turnToHeading(TURN_SPEED, 0.0);
+            driveStraight(DRIVE_SPEED, -7, 0.0);
+            turnToHeading(TURN_SPEED, -90.0);
+            driveStraight(DRIVE_SPEED, 72, -90.0);
+            strafe(DRIVE_SPEED, -28, -90.0);
+            driveStraight(0.1, 2, -90.0);
+            arm.setTargetPosition(1550);
+            holdHeading(TURN_SPEED, -90.0, 3);
+            telemetry.addData("Claw Position", "CLAW POS"+claw.getPosition());
+            claw.setPosition(0);
+            telemetry.addData("Claw Position", "CLAW POS"+claw.getPosition());
+            holdHeading(TURN_SPEED, -90.0, 2);
+            arm.setTargetPosition(0);
+        }
 
         // Step through each leg of the path,
         // Notes:   Reverse movement is obtained by setting a negative distance (not speed)
