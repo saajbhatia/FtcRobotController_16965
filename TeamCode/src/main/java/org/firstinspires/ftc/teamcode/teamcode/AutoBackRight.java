@@ -222,7 +222,7 @@ public class AutoBackRight extends LinearOpMode {
         if (spike == 6) {
             turnToHeading(TURN_SPEED, 30);
             for (int i = 0; i < 50; i++) {
-                if (ultra.getVoltage() * 157 <= 70) {
+                if (ultra.getVoltage() * 157 <= 50) {
                     //left;
                     spike = 4;
                 }
@@ -244,16 +244,32 @@ public class AutoBackRight extends LinearOpMode {
             telemetry.addData("Claw Position", "CLAW POS"+claw.getPosition());
             holdHeading(TURN_SPEED, -90.0, 2);
             arm.setTargetPosition(0);
-        }
-        else if (spike == 4) {
+        } else if (spike == 4) {
             driveStraight(DRIVE_SPEED,10, 30.0);
             driveStraight(DRIVE_SPEED,-10, 30.0);
             turnToHeading(TURN_SPEED, 0.0);
             driveStraight(DRIVE_SPEED, -7, 0.0);
             turnToHeading(TURN_SPEED, -90.0);
-            driveStraight(DRIVE_SPEED, 72, -90.0);
+            driveStraight(DRIVE_SPEED, 62, -90.0);
             strafe(DRIVE_SPEED, -28, -90.0);
-            driveStraight(0.1, 2, -90.0);
+            driveStraight(DRIVE_SPEED, 10, -90.0);
+            arm.setTargetPosition(1550);
+            holdHeading(TURN_SPEED, -90.0, 3);
+            telemetry.addData("Claw Position", "CLAW POS"+claw.getPosition());
+            claw.setPosition(0);
+            telemetry.addData("Claw Position", "CLAW POS"+claw.getPosition());
+            holdHeading(TURN_SPEED, -90.0, 2);
+            arm.setTargetPosition(0);
+        } else if (spike == 6) {
+            turnToHeading(TURN_SPEED, -30);
+            driveStraight(DRIVE_SPEED,10, 30.0);
+            driveStraight(DRIVE_SPEED,-10, 30.0);
+            turnToHeading(TURN_SPEED, 0.0);
+            driveStraight(DRIVE_SPEED, -7, 0.0);
+            turnToHeading(TURN_SPEED, -90.0);
+            driveStraight(DRIVE_SPEED, 62, -90.0);
+            strafe(DRIVE_SPEED, -13, -90.0);
+            driveStraight(DRIVE_SPEED, 8, -90.0);
             arm.setTargetPosition(1550);
             holdHeading(TURN_SPEED, -90.0, 3);
             telemetry.addData("Claw Position", "CLAW POS"+claw.getPosition());
@@ -295,7 +311,7 @@ public class AutoBackRight extends LinearOpMode {
         driveStraight(DRIVE_SPEED,10, -90);
          */
 
-
+        telemetry.addData("spike", "spike " + spike);
         telemetry.addData("Path", "Complete");
         telemetry.update();
         sleep(1000);  // Pause to display last telemetry message.
