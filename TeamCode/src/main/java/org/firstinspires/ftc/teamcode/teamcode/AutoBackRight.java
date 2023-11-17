@@ -222,7 +222,7 @@ public class AutoBackRight extends LinearOpMode {
         if (spike == 6) {
             turnToHeading(TURN_SPEED, 30);
             for (int i = 0; i < 50; i++) {
-                if (ultra.getVoltage() * 157 <= 50) {
+                if (ultra.getVoltage() * 157 <= 20) {
                     //left;
                     spike = 4;
                 }
