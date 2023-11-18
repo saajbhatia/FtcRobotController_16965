@@ -220,33 +220,46 @@ public class AutoBackRight extends LinearOpMode {
                 break;
             }
         }
+        strafe(DRIVE_SPEED, 2, 0);
+        for (int i = 0; i < 20; i++) {
+            if (ultra.getVoltage()*157 <= 75) {
+                spike = 5;
+                break;
+            }
+        }
+        strafe(DRIVE_SPEED, -2, 0);
         double lowest = Double.MAX_VALUE;
+        double average = 0;
         if (spike == 6) {
             turnToHeading(TURN_SPEED, 30);
             for (int i = 0; i < 20; i++) {
                 double voltage = ultra.getVoltage()*157;
                 lowest = Math.min(lowest, voltage);
-                if (ultra.getVoltage() * 157 <= 60) {
-                    //left;
-                    spike = 4;
-                }
+                average += voltage;
+            }
+            average /= 20;
+            if (average <= 50) {
+                //left;
+                spike = 4;
             }
         }
         telemetry.addData("spike", "spike " + spike);
         telemetry.addData("volt", "volt " + ultra.getVoltage()*157);
 
         if (spike == 5) {
-            driveStraight(DRIVE_SPEED,15, 0.0);
+            driveStraight(DRIVE_SPEED,14, 0.0);
             driveStraight(DRIVE_SPEED,-5, 0.0);
             turnToHeading(TURN_SPEED, -90.0);
-            driveStraight(DRIVE_SPEED, 70, -90.0);
-            strafe(DRIVE_SPEED, -2, -90.0);
-            arm.setTargetPosition(1550);
+            driveStraight(DRIVE_SPEED, 8, -90);
+            strafe(DRIVE_SPEED, -2, -90);
+            driveStraight(DRIVE_SPEED, 62.3, -90.0);
+            strafe(DRIVE_SPEED, -2.5, -90.0);
+            arm.setTargetPosition(1600);
             holdHeading(TURN_SPEED, -90.0, 2);
             telemetry.addData("Claw Position", "CLAW POS"+claw.getPosition());
             claw.setPosition(0);
             telemetry.addData("Claw Position", "CLAW POS"+claw.getPosition());
-            holdHeading(TURN_SPEED, -90.0, 2);
+            holdHeading(TURN_SPEED, -90.0, 1);
             arm.setTargetPosition(0);
         } else if (spike == 4) {
             driveStraight(DRIVE_SPEED,10, 30.0);
@@ -255,14 +268,14 @@ public class AutoBackRight extends LinearOpMode {
             driveStraight(DRIVE_SPEED, -8, 0.0);
             turnToHeading(TURN_SPEED, -90.0);
             driveStraight(DRIVE_SPEED, 62, -90.0);
-            strafe(DRIVE_SPEED, -29, -90.0);
-            driveStraight(DRIVE_SPEED, 10, -90.0);
-            arm.setTargetPosition(1550);
+            strafe(DRIVE_SPEED, -28, -90.0);
+            driveStraight(DRIVE_SPEED, 8, -90.0);
+            arm.setTargetPosition(1600);
             holdHeading(TURN_SPEED, -90.0, 2);
             telemetry.addData("Claw Position", "CLAW POS"+claw.getPosition());
             claw.setPosition(0);
             telemetry.addData("Claw Position", "CLAW POS"+claw.getPosition());
-            holdHeading(TURN_SPEED, -90.0, 2);
+            holdHeading(TURN_SPEED, -90.0, 1);
             arm.setTargetPosition(0);
         } else if (spike == 6) {
             turnToHeading(TURN_SPEED, -35);
@@ -273,13 +286,13 @@ public class AutoBackRight extends LinearOpMode {
             turnToHeading(TURN_SPEED, -90.0);
             driveStraight(DRIVE_SPEED, 62, -90.0);
             strafe(DRIVE_SPEED, -18, -90.0);
-            driveStraight(DRIVE_SPEED, 8, -90.0);
+            driveStraight(DRIVE_SPEED, 9, -90.0);
             arm.setTargetPosition(1600);
             holdHeading(TURN_SPEED, -90.0, 2);
             telemetry.addData("Claw Position", "CLAW POS"+claw.getPosition());
             claw.setPosition(0);
             telemetry.addData("Claw Position", "CLAW POS"+claw.getPosition());
-            holdHeading(TURN_SPEED, -90.0, 2);
+            holdHeading(TURN_SPEED, -90.0, 1);
             arm.setTargetPosition(0);
         }
 
@@ -314,11 +327,12 @@ public class AutoBackRight extends LinearOpMode {
         turnToHeading( TURN_SPEED,  -90);
         driveStraight(DRIVE_SPEED,10, -90);
          */
+        telemetry.addData("average", "average: " + average);
         telemetry.addData("lowest", "lowest: " + lowest);
         telemetry.addData("spike", "spike " + spike);
         telemetry.addData("Path", "Complete");
         telemetry.update();
-        sleep(1000);  // Pause to display last telemetry message.
+        sleep(10000);  // Pause to display last telemetry message.
     }
 
     /*
