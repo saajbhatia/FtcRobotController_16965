@@ -232,13 +232,13 @@ public class AutoBackRight extends LinearOpMode {
         double average = 0;
         if (spike == 6) {
             turnToHeading(TURN_SPEED, 30);
-            for (int i = 0; i < 20; i++) {
+            for (int i = 0; i < 30; i++) {
                 double voltage = ultra.getVoltage()*157;
                 lowest = Math.min(lowest, voltage);
                 average += voltage;
             }
-            average /= 20;
-            if (average <= 50) {
+            average /= 30;
+            if (average <= 65) {
                 //left;
                 spike = 4;
             }
@@ -268,7 +268,7 @@ public class AutoBackRight extends LinearOpMode {
             driveStraight(DRIVE_SPEED, -8, 0.0);
             turnToHeading(TURN_SPEED, -90.0);
             driveStraight(DRIVE_SPEED, 62, -90.0);
-            strafe(DRIVE_SPEED, -28, -90.0);
+            strafe(DRIVE_SPEED, -27.5, -90.0);
             driveStraight(DRIVE_SPEED, 8, -90.0);
             arm.setTargetPosition(1600);
             holdHeading(TURN_SPEED, -90.0, 2);

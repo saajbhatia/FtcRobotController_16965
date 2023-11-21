@@ -211,86 +211,128 @@ public class AutoFrontLeft extends LinearOpMode {
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         imu.resetYaw();
 
+        driveStraight(DRIVE_SPEED,12, 0);
+        int spike = 4;
+        for (int i = 0; i < 20; i++) {
+            if (ultra.getVoltage()*157 <= 75) {
+                spike = 5;
+                break;
+            }
+        }
+        strafe(DRIVE_SPEED, 4, 0);
+        for (int i = 0; i < 20; i++) {
+            if (ultra.getVoltage()*157 <= 75) {
+                spike = 5;
+                break;
+            }
+        }
+        strafe(DRIVE_SPEED, -3, 0);
+        double lowest = Double.MAX_VALUE;
+        double average = 0;
+        if (spike == 4) {
+            turnToHeading(TURN_SPEED, 30);
+            for (int i = 0; i < 30; i++) {
+                double voltage = ultra.getVoltage()*157;
+                lowest = Math.min(lowest, voltage);
+                average += voltage;
+            }
+            average /= 30;
+            if (average <= 65) {
+                //left;
+                spike = 6;
+            }
+        }
+        telemetry.addData("spike", "spike " + spike);
+        telemetry.addData("volt", "volt " + ultra.getVoltage()*157);
+
+        if (spike == 5) {
+            driveStraight(DRIVE_SPEED,14, 0.0);
+            driveStraight(DRIVE_SPEED,-5, 0.0);
+            turnToHeading(TURN_SPEED, 90.0);
+            driveStraight(DRIVE_SPEED, 27, 90.0);
+            strafe(DRIVE_SPEED, -1, 90.0);
+            arm.setTargetPosition(1600);
+            holdHeading(TURN_SPEED, 90.0, 2);
+            telemetry.addData("Claw Position", "CLAW POS"+claw.getPosition());
+            claw.setPosition(0);
+            telemetry.addData("Claw Position", "CLAW POS"+claw.getPosition());
+            holdHeading(TURN_SPEED, 90.0, 1);
+            arm.setTargetPosition(0);
+            sleep(500);
+            strafe(DRIVE_SPEED, -20, 90.0);
+            driveStraight(DRIVE_SPEED, 10, 90.0);
+        } else if (spike == 6) {
+            driveStraight(DRIVE_SPEED,10, 30.0);
+            driveStraight(DRIVE_SPEED,-10, 30.0);
+            turnToHeading(TURN_SPEED, 90.0);
+            driveStraight(DRIVE_SPEED, 26.5, 90.0);
+            strafe(DRIVE_SPEED, 5, 90.0);
+            arm.setTargetPosition(1600);
+            holdHeading(TURN_SPEED, 90.0, 2);
+            telemetry.addData("Claw Position", "CLAW POS"+claw.getPosition());
+            claw.setPosition(0);
+            telemetry.addData("Claw Position", "CLAW POS"+claw.getPosition());
+            holdHeading(TURN_SPEED, 90.0, 1);
+            arm.setTargetPosition(0);
+            strafe(DRIVE_SPEED, -15, 90.0);
+            driveStraight(DRIVE_SPEED, 10, 90.0);
+        } else if (spike == 4) {
+            turnToHeading(TURN_SPEED, -30.0);
+            driveStraight(DRIVE_SPEED,6, -30.0);
+            turnToHeading(TURN_SPEED, -50.0);
+            driveStraight(DRIVE_SPEED,7, -50.0);
+            driveStraight(DRIVE_SPEED,-13, -50.0);
+            turnToHeading(TURN_SPEED, 90.0);
+            driveStraight(DRIVE_SPEED, 26.5, 90.0);
+            strafe(DRIVE_SPEED, 15, 90.0);
+            arm.setTargetPosition(1600);
+            holdHeading(TURN_SPEED, 90.0, 2);
+            telemetry.addData("Claw Position", "CLAW POS"+claw.getPosition());
+            claw.setPosition(0);
+            telemetry.addData("Claw Position", "CLAW POS"+claw.getPosition());
+            holdHeading(TURN_SPEED, 90.0, 1);
+            arm.setTargetPosition(0);
+            strafe(DRIVE_SPEED, -27, 90.0);
+            driveStraight(DRIVE_SPEED, 10, 90.0);
+        }
+
         // Step through each leg of the path,
         // Notes:   Reverse movement is obtained by setting a negative distance (not speed)
         //          holdHeading() is used after turns to let the heading stabilize
         //          Add a sleep(2000) after any step to keep the telemetry data visible for review
 
+        /*
         int multiplier = 1;
         if (isMirror) {
             multiplier = -1;
         }
-        /*
+
         claw.setPosition(1);
+        holdHeading(TURN_SPEED, 0, 5);
         driveStraight(DRIVE_SPEED,27, 0.0);
-        driveStraight(DRIVE_SPEED,-10, 0.0);
-        turnToHeading( TURN_SPEED,  90.0);
-        driveStraight(DRIVE_SPEED, 30, 90.0);
+        driveStraight(DRIVE_SPEED,-5, 0.0);
+        turnToHeading( TURN_SPEED,  -90.0);
+        driveStraight(DRIVE_SPEED, 73, -90.0);
         arm.setTargetPosition(1450);
-        holdHeading(TURN_SPEED, 90.0, 2);
+        holdHeading(TURN_SPEED, -90.0, 2);
         telemetry.addData("Claw Position", "CLAW POS"+claw.getPosition());
         claw.setPosition(0);
         telemetry.addData("Claw Position", "CLAW POS"+claw.getPosition());
-        holdHeading(TURN_SPEED, 90.0, 2);
+        holdHeading(TURN_SPEED, -90.0, 2);
         arm.setTargetPosition(0);
-        turnToHeading( TURN_SPEED,  180);
-        driveStraight(DRIVE_SPEED,24, 180);
-        turnToHeading( TURN_SPEED,  90);
-        driveStraight(DRIVE_SPEED,10, 90);
-        */
 
-        driveStraight(DRIVE_SPEED,12, 0);
-        int spike = 3;
-        for (int i = 0; i < 50; i++) {
-            if (ultra.getVoltage()*157 <= 75) {
-                spike = 2;
-                break;
-            }
-        }
-        if (spike == 3) {
-            turnToHeading(TURN_SPEED, 30);
-            for (int i = 0; i < 50; i++) {
-                if (ultra.getVoltage() * 157 <= 70) {
-                    //left;
-                    spike = 1;
-                }
-            }
-        }
-
-        //telemetry.addData("Path", "Complete");
-        if (spike == 2) {
-            //center movement
-            driveStraight(DRIVE_SPEED,17, 0.0);
-            driveStraight(DRIVE_SPEED,-9, 0.0);
-            turnToHeading(TURN_SPEED, 90);
-            driveStraight(DRIVE_SPEED, 33, 90.0);
-            arm.setTargetPosition(1480);
-            sleep(5000);
-
-        } else if (spike == 1) {
-            //left movement
-            //turn to same direction as if it were center
-            turnToHeading(TURN_SPEED, 0);
-            //place pixel on april tag 1
-            //need to avoid moving own pixel out of place
-        } else {
-            //right movement
-            //turn to same direction as if it were center
-            turnToHeading(TURN_SPEED, 0);
-            //place pixel on april tag 3
-            driveStraight(DRIVE_SPEED,17, 0.0);
-            driveStraight(DRIVE_SPEED,-9, 0.0);
-            turnToHeading(TURN_SPEED, 90);
-            driveStraight(DRIVE_SPEED, 33, 90.0);
-            //strafe right before placing pixel to put on april tag 3
-            strafe(DRIVE_SPEED, 5, 90.0);
-            arm.setTargetPosition(1480);
-            telemetry.addData("spike", "spike " + spike);
-            telemetry.addData("volt", "volt " + ultra.getVoltage()*157);
-            telemetry.update();
-            sleep(5000);
-        }
-        // Pause to display last telemetry message.
+        /*
+        turnToHeading( TURN_SPEED,  -180);
+        driveStraight(DRIVE_SPEED,24, -180);
+        turnToHeading( TURN_SPEED,  -90);
+        driveStraight(DRIVE_SPEED,10, -90);
+         */
+        telemetry.addData("average", "average: " + average);
+        telemetry.addData("lowest", "lowest: " + lowest);
+        telemetry.addData("spike", "spike " + spike);
+        telemetry.addData("Path", "Complete");
+        telemetry.update();
+        sleep(10000);  // Pause to display last telemetry message.
     }
 
     /*
@@ -301,7 +343,6 @@ public class AutoFrontLeft extends LinearOpMode {
      */
 
     // **********  HIGH Level driving functions.  ********************
-
 
 
     /**
@@ -357,7 +398,7 @@ public class AutoFrontLeft extends LinearOpMode {
 
             // keep looping while we are still active, and BOTH motors are running.
             while (opModeIsActive() &&
-                    (leftDrive.isBusy() && rightDrive.isBusy() && leftDrive2.isBusy() && rightDrive2.isBusy())) {
+                    (leftDrive.isBusy() && rightDrive.isBusy())) {
 
                 // Determine required steering to keep on heading
                 turnSpeed = getSteeringCorrection(heading, P_DRIVE_GAIN);
@@ -389,6 +430,7 @@ public class AutoFrontLeft extends LinearOpMode {
 
         driveStraight(maxDriveSpeed, distance, heading, false);
     }
+
 
     //strafe method: same input as driveStraight method
     //test to make sure direction is correct
