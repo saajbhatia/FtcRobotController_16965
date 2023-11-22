@@ -128,7 +128,7 @@ public class AutoBackLeft extends LinearOpMode {
     static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // No External Gearing.
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-                                                      (WHEEL_DIAMETER_INCHES * 3.1415);
+            (WHEEL_DIAMETER_INCHES * 3.1415);
     static final boolean isMirror = false;
     static final boolean isBack = false;
 
@@ -138,7 +138,7 @@ public class AutoBackLeft extends LinearOpMode {
     static final double     DRIVE_SPEED             = 0.2;     // Max driving speed for better distance accuracy.
     static final double     TURN_SPEED              = 0.2;     // Max Turn speed to limit turn rate
     static final double     HEADING_THRESHOLD       = 1.0 ;    // How close must the heading get to the target before moving to next step.
-                                                               // Requiring more accuracy (a smaller number) will often make the turn take longer to get into the final position.
+    // Requiring more accuracy (a smaller number) will often make the turn take longer to get into the final position.
     // Define the Proportional control coefficient (or GAIN) for "heading control".
     // We define one value when Turning (larger errors), and the other is used when Driving straight (smaller errors).
     // Increase these numbers if the heading does not corrects strongly enough (eg: a heavy robot or using tracks)
@@ -211,56 +211,85 @@ public class AutoBackLeft extends LinearOpMode {
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         imu.resetYaw();
 
+        sleep(5000);
         driveStraight(DRIVE_SPEED,12, 0);
-        int spike = 1;
-        for (int i = 0; i < 50; i++) {
+        int spike = 6;
+        for (int i = 0; i < 25; i++) {
             if (ultra.getVoltage()*157 <= 75) {
-                spike = 2;
+                spike = 5;
                 break;
             }
         }
-        if (spike == 1) {
-            turnToHeading(TURN_SPEED, -30);
-            for (int i = 0; i < 50; i++) {
-                if (ultra.getVoltage() * 157 <= 70) {
-                    //left;
-                    spike = 3;
-                }
+        strafe(DRIVE_SPEED, -3, 0);
+        for (int i = 0; i < 25; i++) {
+            if (ultra.getVoltage()*157 <= 75) {
+                spike = 5;
+                break;
+            }
+        }
+        double lowest = Double.MAX_VALUE;
+        double average = 0;
+        if (spike == 6) {
+            turnToHeading(TURN_SPEED, 30);
+            for (int i = 0; i < 30; i++) {
+                double voltage = ultra.getVoltage()*157;
+                lowest = Math.min(lowest, voltage);
+                average += voltage;
+            }
+            average /= 30;
+            if (average <= 70) {
+                //left;
+                spike = 4;
             }
         }
         telemetry.addData("spike", "spike " + spike);
         telemetry.addData("volt", "volt " + ultra.getVoltage()*157);
 
-
-        if (spike == 2) {
-            driveStraight(DRIVE_SPEED,15, 0.0);
-            driveStraight(DRIVE_SPEED,-5, 0.0);
+        if (spike == 5) {
+            driveStraight(DRIVE_SPEED,14.5, 0.0);
+            driveStraight(DRIVE_SPEED,-5.5, 0.0);
             turnToHeading(TURN_SPEED, 90.0);
-            driveStraight(DRIVE_SPEED, 70, 90.0);
+            driveStraight(DRIVE_SPEED, 69, 90.0);
             strafe(DRIVE_SPEED, -2, 90.0);
-            arm.setTargetPosition(1550);
-            holdHeading(TURN_SPEED, 90.0, 3);
+            arm.setTargetPosition(1600);
+            holdHeading(TURN_SPEED, 90.0, 2);
             telemetry.addData("Claw Position", "CLAW POS"+claw.getPosition());
             claw.setPosition(0);
             telemetry.addData("Claw Position", "CLAW POS"+claw.getPosition());
-            holdHeading(TURN_SPEED, 90.0, 2);
+            holdHeading(TURN_SPEED, 90.0, 1);
             arm.setTargetPosition(0);
-        }
-        else if (spike == 3) {
+        } else if (spike == 4) {
             driveStraight(DRIVE_SPEED,10, -30.0);
             driveStraight(DRIVE_SPEED,-10, -30.0);
             turnToHeading(TURN_SPEED, 0.0);
-            driveStraight(DRIVE_SPEED, -7, 0.0);
+            driveStraight(DRIVE_SPEED, -8, 0.0);
             turnToHeading(TURN_SPEED, 90.0);
-            driveStraight(DRIVE_SPEED, 72, 90.0);
-            strafe(DRIVE_SPEED, 28, 90.0);
-            driveStraight(0.1, 2, 90.0);
-            arm.setTargetPosition(1550);
-            holdHeading(TURN_SPEED, 90.0, 3);
+            driveStraight(DRIVE_SPEED, 62, 90.0);
+            strafe(DRIVE_SPEED, 27.5, 90.0);
+            driveStraight(DRIVE_SPEED, 8, 90.0);
+            arm.setTargetPosition(1600);
+            holdHeading(TURN_SPEED, 90.0, 2);
             telemetry.addData("Claw Position", "CLAW POS"+claw.getPosition());
             claw.setPosition(0);
             telemetry.addData("Claw Position", "CLAW POS"+claw.getPosition());
+            holdHeading(TURN_SPEED, 90.0, 1);
+            arm.setTargetPosition(0);
+        } else if (spike == 6) {
+            turnToHeading(TURN_SPEED, 35);
+            driveStraight(DRIVE_SPEED,13, 35.0);
+            driveStraight(DRIVE_SPEED,-13, 35.0);
+            turnToHeading(TURN_SPEED, 0.0);
+            driveStraight(DRIVE_SPEED, -7, 0.0);
+            turnToHeading(TURN_SPEED, 90.0);
+            driveStraight(DRIVE_SPEED, 62, 90.0);
+            strafe(DRIVE_SPEED, 18, 90.0);
+            driveStraight(DRIVE_SPEED, 9, 90.0);
+            arm.setTargetPosition(1600);
             holdHeading(TURN_SPEED, 90.0, 2);
+            telemetry.addData("Claw Position", "CLAW POS"+claw.getPosition());
+            claw.setPosition(0);
+            telemetry.addData("Claw Position", "CLAW POS"+claw.getPosition());
+            holdHeading(TURN_SPEED, 90.0, 1);
             arm.setTargetPosition(0);
         }
 
@@ -270,18 +299,23 @@ public class AutoBackLeft extends LinearOpMode {
         //          Add a sleep(2000) after any step to keep the telemetry data visible for review
 
         /*
+        int multiplier = 1;
+        if (isMirror) {
+            multiplier = -1;
+        }
+
         claw.setPosition(1);
         holdHeading(TURN_SPEED, 0, 5);
         driveStraight(DRIVE_SPEED,27, 0.0);
         driveStraight(DRIVE_SPEED,-5, 0.0);
-        turnToHeading( TURN_SPEED,  90.0);
-        driveStraight(DRIVE_SPEED, 76, 90.0);
+        turnToHeading( TURN_SPEED,  -90.0);
+        driveStraight(DRIVE_SPEED, 73, -90.0);
         arm.setTargetPosition(1450);
-        holdHeading(TURN_SPEED, 90.0, 2);
+        holdHeading(TURN_SPEED, -90.0, 2);
         telemetry.addData("Claw Position", "CLAW POS"+claw.getPosition());
         claw.setPosition(0);
         telemetry.addData("Claw Position", "CLAW POS"+claw.getPosition());
-        holdHeading(TURN_SPEED, 90.0, 2);
+        holdHeading(TURN_SPEED, -90.0, 2);
         arm.setTargetPosition(0);
 
         /*
@@ -290,10 +324,12 @@ public class AutoBackLeft extends LinearOpMode {
         turnToHeading( TURN_SPEED,  -90);
         driveStraight(DRIVE_SPEED,10, -90);
          */
-
+        telemetry.addData("average", "average: " + average);
+        telemetry.addData("lowest", "lowest: " + lowest);
+        telemetry.addData("spike", "spike " + spike);
         telemetry.addData("Path", "Complete");
         telemetry.update();
-        sleep(1000);  // Pause to display last telemetry message.
+        sleep(10000);  // Pause to display last telemetry message.
     }
 
     /*
@@ -307,17 +343,17 @@ public class AutoBackLeft extends LinearOpMode {
 
 
     /**
-    *  Drive in a straight line, on a fixed compass heading (angle), based on encoder counts.
-    *  Move will stop if either of these conditions occur:
-    *  1) Move gets to the desired position
-    *  2) Driver stops the OpMode running.
-    *
-    * @param maxDriveSpeed MAX Speed for forward/rev motion (range 0 to +1.0) .
-    * @param distance   Distance (in inches) to move from current position.  Negative distance means move backward.
-    * @param heading      Absolute Heading Angle (in Degrees) relative to last gyro reset.
-    *                   0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
-    *                   If a relative angle is required, add/subtract from the current robotHeading.
-    */
+     *  Drive in a straight line, on a fixed compass heading (angle), based on encoder counts.
+     *  Move will stop if either of these conditions occur:
+     *  1) Move gets to the desired position
+     *  2) Driver stops the OpMode running.
+     *
+     * @param maxDriveSpeed MAX Speed for forward/rev motion (range 0 to +1.0) .
+     * @param distance   Distance (in inches) to move from current position.  Negative distance means move backward.
+     * @param heading      Absolute Heading Angle (in Degrees) relative to last gyro reset.
+     *                   0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
+     *                   If a relative angle is required, add/subtract from the current robotHeading.
+     */
     public void driveStraight(double maxDriveSpeed,
                               double distance,
                               double heading,
@@ -391,6 +427,7 @@ public class AutoBackLeft extends LinearOpMode {
 
         driveStraight(maxDriveSpeed, distance, heading, false);
     }
+
 
     //strafe method: same input as driveStraight method
     //test to make sure direction is correct
