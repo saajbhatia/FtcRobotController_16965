@@ -251,6 +251,7 @@ public class AutoBackLeft extends LinearOpMode {
             turnToHeading(TURN_SPEED, 90.0);
             driveStraight(DRIVE_SPEED, 69, 90.0);
             strafe(DRIVE_SPEED, -2, 90.0);
+            moveToDistance(24, 0.5, 90.0);
             arm.setTargetPosition(1600);
             holdHeading(TURN_SPEED, 90.0, 2);
             telemetry.addData("Claw Position", "CLAW POS"+claw.getPosition());
@@ -340,7 +341,11 @@ public class AutoBackLeft extends LinearOpMode {
      */
 
     // **********  HIGH Level driving functions.  ********************
-
+    public void moveToDistance(double distance, double error, double heading) {
+        while (ultra.getVoltage()*157 > distance + error || ultra.getVoltage()*157 < distance - error) {
+            driveStraight(DRIVE_SPEED, (ultra.getVoltage()*157 - distance)/10, heading);
+        }
+    }
 
     /**
      *  Drive in a straight line, on a fixed compass heading (angle), based on encoder counts.
