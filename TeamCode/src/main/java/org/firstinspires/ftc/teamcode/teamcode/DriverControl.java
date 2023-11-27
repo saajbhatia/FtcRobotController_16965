@@ -217,13 +217,17 @@ public class DriverControl extends OpMode
         return normalized_angle;
     }
 
-    public double calculateP(double power) {
+    public double calculateP(double power, double deadband) {
         double currentHeading = getAngleImu();
         double wantedHeading = heading;
         double headingCorrection = currentHeading - wantedHeading;
         while (headingCorrection > 180) headingCorrection -= 360;
         while (headingCorrection <= -180) headingCorrection += 360;
 
+        if (Math.abs(headingCorrection) > deadband) {
+            telemetry.addData("Deadband activated", "WARNING deadband was activated, heading correction exceeded limit of " + deadband + " degrees.");
+            return 0.0;
+        }
         return headingCorrection * power;
     }
 
@@ -288,78 +292,65 @@ public class DriverControl extends OpMode
         //} else if (gamepad1.dpad_up) {
         //    visionPortal.resumeStreaming();
         //}
-        if (!isAutonomous) {
-            // just change wanted heading with turn on game controller, and let the automatic system do the rest.
-            heading -= gamepad1.right_stick_x * 6 * slowMultiplier;
+        // just change wanted heading with turn on game controller, and let the automatic system do the rest.
+        double before_correction_turn = -gamepad1.right_stick_x/3;
+        if (Math.abs(before_correction_turn) > 0) {
+            heading = realHeading;
             heading = normalize(heading);
-            turn = calculateP(0.02);
-            strafe = -gamepad1.left_stick_x * slowMultiplier;
-            forward = -gamepad1.left_stick_y * slowMultiplier;
-            if (gamepad1.dpad_down) {
-                armPosition = 0;
-            } else if (gamepad1.dpad_up) {
-                armPosition = 1950;
-            } else if (gamepad1.right_bumper) {
-                armPosition = 1280;
-            } else if (gamepad1.left_bumper) {
-                armPosition = 2040;
-            }
-            if (gamepad1.x) {
-                clawPosition = 1.0;
-            } else if (gamepad1.b) {
-                clawPosition = 0.0;
-            }
-            if (gamepad1.dpad_left) {
-                pivotPower = -0.05;
-                telemetry.addData("testpivot", "Pivot went, dpad left pressed");
-            } else if (gamepad1.dpad_right) {
-                pivotPower = 0.05;
-            }
-            if (gamepad1.y) {
-                arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                armPosition = 0;
-            }
-            armPosition -= gamepad1.right_trigger * 30;
-            armPosition += gamepad1.left_trigger * 30;
-            if (gamepad2.x) {
-                airPlane.setPosition(0.0);
-            } else if (gamepad2.y) {
-                airPlane.setPosition(0.75);
-            }
+        }
+        turn = before_correction_turn + calculateP(0.004, 20);
+        strafe = -gamepad1.left_stick_x * slowMultiplier;
+        forward = -gamepad1.left_stick_y * slowMultiplier;
+        if (gamepad1.dpad_down) {
+            armPosition = 0;
+        } else if (gamepad1.dpad_up) {
+            armPosition = 1950;
+        } else if (gamepad1.right_bumper) {
+            armPosition = 1280;
+        } else if (gamepad1.left_bumper) {
+            armPosition = 2040;
+        }
+        if (gamepad1.x) {
+            clawPosition = 1.0;
+        } else if (gamepad1.b) {
+            clawPosition = 0.0;
+        }
+        if (gamepad1.dpad_left) {
+            pivotPower = -0.05;
+            telemetry.addData("testpivot", "Pivot went, dpad left pressed");
+        } else if (gamepad1.dpad_right) {
+            pivotPower = 0.05;
+        }
+        if (gamepad1.y) {
+            arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            armPosition = 0;
+        }
+        armPosition -= gamepad1.right_trigger * 30;
+        armPosition += gamepad1.left_trigger * 30;
+        if (gamepad2.x) {
+            airPlane.setPosition(0.0);
+        } else if (gamepad2.y) {
+            airPlane.setPosition(0.75);
+        }
 
-            if (cooldownTicksAButton <= 0) {
-                if (gamepad1.a) {
-                    if (slowMultiplier == 1.0) {
-                        slowMultiplier = 1.0/2.0;
-                    } else {
-                        slowMultiplier = 1.0;
-                    }
-                    cooldownTicksAButton = 20;
+        if (cooldownTicksAButton <= 0) {
+            if (gamepad1.a) {
+                if (slowMultiplier == 1.0) {
+                    slowMultiplier = 1.0/2.0;
+                } else {
+                    slowMultiplier = 1.0;
                 }
-            } else {
-                cooldownTicksAButton--;
+                cooldownTicksAButton = 20;
             }
         } else {
-            //autonomous code
-            turn = calculateP(0.02);
-            heading = normalize(heading);
-            //get to our strip, put pixel down after identifying which one has our team object
-
-            //go to backboard
-            //put pixel on backboard
-            //park backstage
+            cooldownTicksAButton--;
         }
 
 
         x += (Math.cos(realHeading) * forward)/100;
         y += (Math.sin(realHeading) * forward)/100;
-        // armPower = Range.clip(1, -1.0, 1.0);
 
-        // Tank Mode uses one stick to control each wheel.
-        // - This requires no math, but it is hard to drive forward slowly and keep straight.
-        // leftPower  = -gamepad1.left_stick_y ;
-        // rightPower = -gamepad1.right_stick_y ;
         backLeftPower = Range.clip(((forward + turn - strafe) * slowMultiplier) / 3, -1.0, 1.0);
         backRightPower = Range.clip(((forward - turn + strafe) * slowMultiplier) / 3, -1.0, 1.0);
         frontLeftPower = Range.clip(((forward + turn + strafe) * slowMultiplier) / 3, -1.0, 1.0);
@@ -375,7 +366,6 @@ public class DriverControl extends OpMode
         airPlane.setPosition(airPlane.getPosition() + airPlanePower);
 
 
-        // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
         telemetry.addData("Motors", "left (%.2f), right (%.2f)", backLeftPower, backRightPower);
         telemetry.addData("Angle", "Heading: " + getAngleImu());
