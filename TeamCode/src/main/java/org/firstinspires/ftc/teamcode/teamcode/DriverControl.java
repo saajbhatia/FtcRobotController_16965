@@ -41,6 +41,7 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
@@ -208,13 +209,10 @@ public class DriverControl extends OpMode
     }
 
     public static double normalize(double degrees) {
-        double normalized_angle = degrees;
-        if (normalized_angle > 180) {
-            normalized_angle -= 360;
-        } else if (normalized_angle < -180) {
-            normalized_angle += 360;
-        }
-        return normalized_angle;
+        double normalizedAngle = degrees;
+        while (normalizedAngle > 180) normalizedAngle -= 360;
+        while (normalizedAngle <= -180) normalizedAngle += 360;
+        return normalizedAngle;
     }
 
     public double calculateP(double power, double deadband) {
