@@ -251,7 +251,8 @@ public class AutoBackLeft extends LinearOpMode {
             turnToHeading(TURN_SPEED, 90.0);
             driveStraight(DRIVE_SPEED, 69, 90.0);
             strafe(DRIVE_SPEED, -2, 90.0);
-            arm.setTargetPosition(1600);
+            moveToDistance(26, 0.75, -90.0);
+            arm.setTargetPosition(1640);
             holdHeading(TURN_SPEED, 90.0, 2);
             telemetry.addData("Claw Position", "CLAW POS"+claw.getPosition());
             claw.setPosition(0);
@@ -267,7 +268,8 @@ public class AutoBackLeft extends LinearOpMode {
             driveStraight(DRIVE_SPEED, 62, 90.0);
             strafe(DRIVE_SPEED, 27.5, 90.0);
             driveStraight(DRIVE_SPEED, 8, 90.0);
-            arm.setTargetPosition(1600);
+            moveToDistance(26, 0.75, 90.0);
+            arm.setTargetPosition(1640);
             holdHeading(TURN_SPEED, 90.0, 2);
             telemetry.addData("Claw Position", "CLAW POS"+claw.getPosition());
             claw.setPosition(0);
@@ -284,7 +286,8 @@ public class AutoBackLeft extends LinearOpMode {
             driveStraight(DRIVE_SPEED, 62, 90.0);
             strafe(DRIVE_SPEED, 18, 90.0);
             driveStraight(DRIVE_SPEED, 9, 90.0);
-            arm.setTargetPosition(1600);
+            moveToDistance(26, 0.75, 90.0);
+            arm.setTargetPosition(1640);
             holdHeading(TURN_SPEED, 90.0, 2);
             telemetry.addData("Claw Position", "CLAW POS"+claw.getPosition());
             claw.setPosition(0);
@@ -340,6 +343,22 @@ public class AutoBackLeft extends LinearOpMode {
      */
 
     // **********  HIGH Level driving functions.  ********************
+    public void moveToDistance(double distance, double error, double heading) {
+        if (opModeIsActive()) {
+            double voltage = 0;
+            for (int i = 0; i < 20; i++) {
+                voltage += ultra.getVoltage() * 157;
+            }
+            voltage /= 20;
+            while (opModeIsActive() && (voltage > distance + error || voltage < distance - error)) {
+                driveStraight(DRIVE_SPEED, (voltage - distance) / 3, heading);
+                for (int i = 0; i < 20; i++) {
+                    voltage += ultra.getVoltage() * 157;
+                }
+                voltage /= 20;
+            }
+        }
+    }
 
 
     /**
