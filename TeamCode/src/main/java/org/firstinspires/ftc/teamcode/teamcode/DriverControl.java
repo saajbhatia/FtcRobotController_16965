@@ -293,12 +293,17 @@ public class DriverControl extends OpMode
         //    visionPortal.resumeStreaming();
         //}
         // just change wanted heading with turn on game controller, and let the automatic system do the rest.
-        double before_correction_turn = -gamepad1.right_stick_x/3;
-        if (Math.abs(before_correction_turn) > 0) {
+        double before_correction_turn = gamepad1.right_stick_x;
+        //small value to account for slight stick drift and things like that.
+        //change if necesarry - not tested
+        if (Math.abs(before_correction_turn) > 0.02) {
+            telemetry.addData("test correction", "heading values updated");
             heading = realHeading;
             heading = normalize(heading);
         }
-        turn = before_correction_turn + calculateP(0.004, 20);
+        double correction_turn = calculateP(0.004, 30);
+        telemetry.addData("Turn Correction", "Turn correction: " + correction_turn);
+        turn = before_correction_turn + correction_turn;
         strafe = -gamepad1.left_stick_x * slowMultiplier;
         forward = -gamepad1.left_stick_y * slowMultiplier;
         if (gamepad1.dpad_down) {
@@ -306,7 +311,7 @@ public class DriverControl extends OpMode
         } else if (gamepad1.dpad_up) {
             armPosition = 1950;
         } else if (gamepad1.right_bumper) {
-            armPosition = 1280;
+            armPosition = 1500;
         } else if (gamepad1.left_bumper) {
             armPosition = 2040;
         }
@@ -337,7 +342,7 @@ public class DriverControl extends OpMode
         if (cooldownTicksAButton <= 0) {
             if (gamepad1.a) {
                 if (slowMultiplier == 1.0) {
-                    slowMultiplier = 1.0/2.0;
+                    slowMultiplier = 3.0/4.0;
                 } else {
                     slowMultiplier = 1.0;
                 }
@@ -373,7 +378,7 @@ public class DriverControl extends OpMode
         telemetry.addData("WantedHeading", "Wanted Heading: " + heading);
         telemetry.addData("Forward", "Forward: " + forward);
         telemetry.addData("Ultrasonic", "Ultrasonic value (cm): " + (157 * ultrasonicSensor.getVoltage()));
-        telemetry.addData("ServoTest", "Servo pos, and then stuff: " + claw.getPosition() + ", " + claw.getController());
+        telemetry.addData("ServoTest", "Servo pos, and then stuff: " + claw.getPosition());
         telemetry.addData("x and y", "X, Y: " + x + ", " + y);
         telemetry.addData("arm position", "Arm Position: " + arm.getCurrentPosition());
         telemetry.addData("slow amount", "Slow amount: " + slowMultiplier);
