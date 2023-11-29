@@ -291,7 +291,7 @@ public class DriverControl extends OpMode
         //    visionPortal.resumeStreaming();
         //}
         // just change wanted heading with turn on game controller, and let the automatic system do the rest.
-        double before_correction_turn = gamepad1.right_stick_x;
+        double before_correction_turn = gamepad1.right_stick_x * 0.8;
         //small value to account for slight stick drift and things like that.
         //change if necesarry - not tested
         if (Math.abs(before_correction_turn) > 0.02) {
