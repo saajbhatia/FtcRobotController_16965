@@ -96,7 +96,9 @@ public class DriverControl extends OpMode
     private double slowMultiplier = 1.0;
     private int armPosition = 0;
     private int cooldownTicksAButton = 0;
-    private int cooldownTicksYButton = 0;
+    private int cooldownTicksXButton = 0;
+
+    private int backUpTicks = 0;
 
 
     /*
@@ -313,10 +315,24 @@ public class DriverControl extends OpMode
         } else if (gamepad1.left_bumper) {
             armPosition = 2040;
         }
-        if (gamepad1.x) {
-            clawPosition = 1.0;
-        } else if (gamepad1.b) {
-            clawPosition = 0.0;
+        if (cooldownTicksXButton <= 0) {
+            if (gamepad1.x) {
+                if (clawPosition == 0.0) {
+                    clawPosition = 1.0;
+                } else {
+                    clawPosition = 0.0;
+                }
+                cooldownTicksXButton = 10;
+            }
+        } else {
+            cooldownTicksXButton--;
+        }
+        if (gamepad1.b) {
+            backUpTicks = 11;
+        }
+        if (backUpTicks > 0) {
+            forward = -1;
+            backUpTicks--;
         }
         if (gamepad1.dpad_left) {
             pivotPower = -0.05;
