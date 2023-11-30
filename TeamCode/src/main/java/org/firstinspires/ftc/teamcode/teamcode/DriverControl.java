@@ -298,7 +298,7 @@ public class DriverControl extends OpMode
         //change if necesarry - not tested
         if (Math.abs(before_correction_turn) > 0.02) {
             telemetry.addData("test correction", "heading values updated");
-            heading = realHeading;
+            heading = realHeading - 180;
             heading = normalize(heading);
         }
         double correction_turn = calculateP(0.004, 30);

@@ -212,7 +212,7 @@ public class AutoFrontLeft extends LinearOpMode {
         imu.resetYaw();
 
         driveStraight(DRIVE_SPEED,12, 0);
-        int spike = 4;
+        int spike = 6;
         for (int i = 0; i < 25; i++) {
             if (ultra.getVoltage()*157 <= 75) {
                 spike = 5;
@@ -229,7 +229,7 @@ public class AutoFrontLeft extends LinearOpMode {
         strafe(DRIVE_SPEED, -3, 0);
         double lowest = Double.MAX_VALUE;
         double average = 0;
-        if (spike == 4) {
+        if (spike == 6) {
             turnToHeading(TURN_SPEED, 30);
             for (int i = 0; i < 30; i++) {
                 double voltage = ultra.getVoltage()*157;
@@ -239,7 +239,7 @@ public class AutoFrontLeft extends LinearOpMode {
             average /= 30;
             if (average <= 70) {
                 //left;
-                spike = 6;
+                spike = 4;
             }
         }
         telemetry.addData("spike", "spike " + spike);
@@ -251,7 +251,7 @@ public class AutoFrontLeft extends LinearOpMode {
             turnToHeading(TURN_SPEED, 90.0);
             driveStraight(DRIVE_SPEED, 27, 90.0);
             strafe(DRIVE_SPEED, -1, 90.0);
-            moveToDistance(26, 0.75, 90.0);
+            moveToDistance(26.5, 0.75, 90.0);
             arm.setTargetPosition(1640);
             holdHeading(TURN_SPEED, 90.0, 2);
             telemetry.addData("Claw Position", "CLAW POS"+claw.getPosition());
@@ -262,13 +262,13 @@ public class AutoFrontLeft extends LinearOpMode {
             sleep(500);
             strafe(DRIVE_SPEED, -20, 90.0);
             driveStraight(DRIVE_SPEED, 10, 90.0);
-        } else if (spike == 6) {
+        } else if (spike == 4) {
             driveStraight(DRIVE_SPEED,10, 30.0);
             driveStraight(DRIVE_SPEED,-10, 30.0);
             turnToHeading(TURN_SPEED, 90.0);
             driveStraight(DRIVE_SPEED, 27.5, 90.0);
-            strafe(DRIVE_SPEED,1, 90.0);
-            moveToDistance(26, 0.75, 90.0);
+            strafe(DRIVE_SPEED,1.5, 90.0);
+            moveToDistance(26.5, 0.75, 90.0);
             arm.setTargetPosition(1640);
             holdHeading(TURN_SPEED, 90.0, 2);
             telemetry.addData("Claw Position", "CLAW POS"+claw.getPosition());
@@ -279,7 +279,7 @@ public class AutoFrontLeft extends LinearOpMode {
             sleep(500);
             strafe(DRIVE_SPEED, -16.5, 90.0);
             driveStraight(DRIVE_SPEED, 10, 90.0);
-        } else if (spike == 4) {
+        } else if (spike == 6) {
             turnToHeading(TURN_SPEED, -30.0);
             driveStraight(DRIVE_SPEED,6, -30.0);
             turnToHeading(TURN_SPEED, -50.0);
@@ -288,7 +288,7 @@ public class AutoFrontLeft extends LinearOpMode {
             turnToHeading(TURN_SPEED, 90.0);
             driveStraight(DRIVE_SPEED, 24.5, 90.0);
             strafe(DRIVE_SPEED, 11.75, 90.0);
-            moveToDistance(26, 0.75, 90.0);
+            moveToDistance(26.5, 0.75, 90.0);
             arm.setTargetPosition(1640);
             holdHeading(TURN_SPEED, 90.0, 2);
             telemetry.addData("Claw Position", "CLAW POS"+claw.getPosition());
