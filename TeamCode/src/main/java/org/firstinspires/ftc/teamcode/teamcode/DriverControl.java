@@ -301,11 +301,11 @@ public class DriverControl extends OpMode
             heading = realHeading - 180;
             heading = normalize(heading);
         }
-        double correction_turn = calculateP(0.004, 30);
+        double correction_turn = calculateP(0.02, 30);
         telemetry.addData("Turn Correction", "Turn correction: " + correction_turn);
         turn = before_correction_turn + correction_turn;
-        strafe = -gamepad1.left_stick_x * slowMultiplier;
-        forward = -gamepad1.left_stick_y * slowMultiplier;
+        strafe = -gamepad1.left_stick_x;
+        forward = -gamepad1.left_stick_y;
         if (gamepad1.dpad_down) {
             armPosition = 0;
         } else if (gamepad1.dpad_up) {
@@ -356,7 +356,7 @@ public class DriverControl extends OpMode
         if (cooldownTicksAButton <= 0) {
             if (gamepad1.a) {
                 if (slowMultiplier == 1.0) {
-                    slowMultiplier = 3.0/4.0;
+                    slowMultiplier = 1.0/2.0;
                 } else {
                     slowMultiplier = 1.0;
                 }
