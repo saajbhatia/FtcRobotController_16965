@@ -260,7 +260,7 @@ public class AutoFrontLeft extends LinearOpMode {
             holdHeading(TURN_SPEED, 90.0, 1);
             arm.setTargetPosition(0);
             sleep(500);
-            strafe(DRIVE_SPEED, -20, 90.0);
+            strafe(DRIVE_SPEED, -23, 90.0);
             driveStraight(DRIVE_SPEED, 10, 90.0);
         } else if (spike == 4) {
             driveStraight(DRIVE_SPEED,10, 30.0);
@@ -277,7 +277,7 @@ public class AutoFrontLeft extends LinearOpMode {
             holdHeading(TURN_SPEED, 90.0, 1);
             arm.setTargetPosition(0);
             sleep(500);
-            strafe(DRIVE_SPEED, -16.5, 90.0);
+            strafe(DRIVE_SPEED, -19.5, 90.0);
             driveStraight(DRIVE_SPEED, 10, 90.0);
         } else if (spike == 6) {
             turnToHeading(TURN_SPEED, -30.0);
@@ -297,7 +297,7 @@ public class AutoFrontLeft extends LinearOpMode {
             holdHeading(TURN_SPEED, 90.0, 1);
             arm.setTargetPosition(0);
             sleep(500);
-            strafe(DRIVE_SPEED, -27, 90.0);
+            strafe(DRIVE_SPEED, -30, 90.0);
             driveStraight(DRIVE_SPEED, 10, 90.0);
         }
 
