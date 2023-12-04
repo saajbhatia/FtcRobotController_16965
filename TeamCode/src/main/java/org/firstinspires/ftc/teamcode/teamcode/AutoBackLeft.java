@@ -249,9 +249,9 @@ public class AutoBackLeft extends LinearOpMode {
             driveStraight(DRIVE_SPEED,14.5, 0.0);
             driveStraight(DRIVE_SPEED,-5.5, 0.0);
             turnToHeading(TURN_SPEED, 90.0);
-            driveStraight(DRIVE_SPEED, 69, 90.0);
+            driveStraight(DRIVE_SPEED, 66, 90.0);
             strafe(DRIVE_SPEED, -2, 90.0);
-            moveToDistance(26.5, 0.75, 90.0);
+            moveToDistance(25, 0.75, 90.0);
             arm.setTargetPosition(1640);
             holdHeading(TURN_SPEED, 90.0, 2);
             telemetry.addData("Claw Position", "CLAW POS"+claw.getPosition());
@@ -267,8 +267,8 @@ public class AutoBackLeft extends LinearOpMode {
             turnToHeading(TURN_SPEED, 90.0);
             driveStraight(DRIVE_SPEED, 58, 90.0);
             strafe(DRIVE_SPEED, 23.5, 90.0);
-            driveStraight(DRIVE_SPEED, 7, 90.0);
-            moveToDistance(26.5, 0.75, 90.0);
+            driveStraight(DRIVE_SPEED, 5, 90.0);
+            moveToDistance(25, 0.75, 90.0);
             arm.setTargetPosition(1640);
             holdHeading(TURN_SPEED, 90.0, 2);
             telemetry.addData("Claw Position", "CLAW POS"+claw.getPosition());
@@ -285,8 +285,8 @@ public class AutoBackLeft extends LinearOpMode {
             turnToHeading(TURN_SPEED, 90.0);
             driveStraight(DRIVE_SPEED, 58, 90.0);
             strafe(DRIVE_SPEED, 13.25, 90.0);
-            driveStraight(DRIVE_SPEED, 7, 90.0);
-            moveToDistance(26.5, 0.75, 90.0);
+            driveStraight(DRIVE_SPEED, 5, 90.0);
+            moveToDistance(25, 0.75, 90.0);
             arm.setTargetPosition(1640);
             holdHeading(TURN_SPEED, 90.0, 2);
             telemetry.addData("Claw Position", "CLAW POS"+claw.getPosition());
